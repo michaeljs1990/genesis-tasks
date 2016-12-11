@@ -10,8 +10,13 @@ module Logging
     end
 
     def self.log message
-      if facter['asset_tag']
-        collins.log! facter['asset_tag'], message
+      begin
+        t = facter['asset_tag']
+        if t
+          collins.log! t, message
+        end
+      rescue => e
+        puts "Error logging to Collins asset #{t}: #{e.message}"
       end
     end
   end
