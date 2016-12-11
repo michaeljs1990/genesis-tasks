@@ -9,12 +9,15 @@ class AssetCreation
   end
 
   precondition "asset tag doesn't exist in collins?" do
-    not collins.exists?(facter['asset_tag'])
+    t = facter['asset_tag']
+    log "Checking for #{t} in collins..."
+    exists = collins.exists?(t)
+    log "Asset #{t} not found in collins!" if !exists
+    !exists
   end
 
   run do
     begin
-      # the default is to generate_ipmi, but be explicit since we know we need it
       collins.create!(facter['asset_tag'], :generate_ipmi => true)
     rescue Collins::RequestError => e
       if e.code == 409
@@ -26,3 +29,4 @@ class AssetCreation
     end
   end
 end
+
