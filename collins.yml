@@ -1,0 +1,21 @@
+---
+:ipxe:
+    :images:
+        :initrd: http://192.168.1.5/ipxe-imgs/genesis-initrd.img
+        :kernel: http://192.168.1.5/ipxe-imgs/genesis-vmlinuz
+    :kernel_flags: rootflags=loop root=live:/genesis.iso rootfstype=auto ro liveimg vga=791 rd_NO_LUKS rd_NO_MD rd_NO_DM console=tty0 console=ttyS1,115200
+    :menu_default: intake
+    :image_server: http://192.168.1.5/ipxe-imgs
+:genesis_server: http://192.168.1.5
+:tasks_url: http://192.168.1.5:8888/tasks
+:gem_files:
+    "genesis_framework": http://192.168.1.5:8888/gem/genesis_framework
+:gem_args: &gem_args --no-ri --no-rdoc # Arguments to pass to gem install. Can include --source for internal repos
+collins:
+    host: http://192.168.1.5:9000
+    username: blake
+    password: admin:first
+    timeout: 30
+:stage2_url: http://192.168.1.5/stage2/init.rb
+:loggers: ['Collins']
+
