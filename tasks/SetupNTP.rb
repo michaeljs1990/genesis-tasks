@@ -2,7 +2,9 @@ class SetupNTP
   include Genesis::Framework::Task
 
   precondition "has ntp server?" do
-    not config['ntp_server'].nil?
+    nil_config_value = config['ntp_server'].nil?
+    log "You have not set ntp_server in your config.yaml file" if nil_config_value
+    not nil_config_value
   end
 
   init do
@@ -18,3 +20,4 @@ class SetupNTP
     log "Wrote system time to hardware clock"
   end
 end
+
