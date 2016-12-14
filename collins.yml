@@ -13,8 +13,8 @@
 :gem_args: &gem_args --no-ri --no-rdoc # Arguments to pass to gem install. Can include --source for internal repos
 collins:
     host: http://192.168.1.5:9000
-    username: blake
-    password: admin:first
+    username: robot
+    password: 42242I8KaG7V
     timeout: 30
 :stage2_url: http://192.168.1.5/stage2/init.rb
 :loggers: ['Collins']
