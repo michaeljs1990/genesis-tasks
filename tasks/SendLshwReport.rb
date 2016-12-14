@@ -35,10 +35,28 @@ class SendLshwReport
     lshw_xml = Nokogiri::XML lshw_report
    
     # Send report to collins so it's useful to us 
-    success = collins.set_multi_attribute! facter['asset_tag'], { 
-      :lshw => lshw_xml.to_xml, 
-      :CHASSIS_TAG => facter['asset_tag']}
-    log 'Reporting lshw to collins failed on set_multi_attribute' if not success
+    # Put collins in maintenance mode so we can submit this report
+    # then switch it back to the original state.
+    asset = collins.get(facter['asset_tag'])
+    final_status = asset.status
+
+    log "Setting status to maintenance to submit LSHW report without LLDP details"
+    if not collins.set_status! asset.tag, :maintenance, "Gathering LSHW info"
+      log "Failed to put asset into maintenance"
+      return 1
+    end
+
+    log "Submitting LSHW report"
+    if not  collins.set_multi_attribute! facter['asset_tag'], {:lshw => lshw_xml.to_xml, :CHASSIS_TAG => facter['asset_tag']}
+      log "Unable to submit LSHW report"
+      return 1
+    end
+
+    log "Changing status back to #{final_status}"
+    if not collins.set_status! asset.tag, final_status, "Setting state back to #{final_status}"
+      log "Unable to change status"
+      return 1
+    end
   end
 
   def self.generate_lshw_report
