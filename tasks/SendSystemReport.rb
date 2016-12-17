@@ -1,4 +1,6 @@
-class SendLshwReport
+require 'open-uri'
+
+class SendSystemReport
   include Genesis::Framework::Task
 
   description "Send Lshw info to collins"
@@ -16,12 +18,23 @@ class SendLshwReport
   end
 
   init do
-    # install nokogiri for parsing XML returned
-    # from lshw.
+    # install nokogiri for parsing XML
     install :gem, 'nokogiri'
 
-    log "Installing lshw"
-    install :rpm, "lshw"
+    require 'open-uri'
+
+    # Download rpm package to install
+    lldpd_url = config[:genesis_tasks][:lldp_rpm]
+    open('/tmp/lldp.rpm', 'wb') do |file|
+      file << open(lldpd_url).read
+    end
+
+
+    log 'Installing lshw and lldpd'
+    install :rpm, 'lshw', '/tmp/lldp.rpm'
+
+    log 'Starting up lldpd so we can call lldpctl'
+    `/etc/init.d/lldpd start`
   end
 
   run do
@@ -34,34 +47,38 @@ class SendLshwReport
     lshw_report = self.generate_lshw_report
     lshw_xml = Nokogiri::XML lshw_report
    
+    lldp_report = self.generate_lldp_report
+    lldp_xml = Nokogiri::XML lldp_report
+
     # Send report to collins so it's useful to us 
     # Put collins in maintenance mode so we can submit this report
     # then switch it back to the original state.
     asset = collins.get(facter['asset_tag'])
     final_status = asset.status
 
-    log "Setting status to maintenance to submit LSHW report without LLDP details"
-    if not collins.set_status! asset.tag, :maintenance, "Gathering LSHW info"
-      log "Failed to put asset into maintenance"
-      return 1
-    end
-
     log "Submitting LSHW report"
-    if not  collins.set_multi_attribute! facter['asset_tag'], {:lshw => lshw_xml.to_xml, :CHASSIS_TAG => facter['asset_tag']}
-      log "Unable to submit LSHW report"
+    if not  collins.set_multi_attribute! facter['asset_tag'], {
+      :lshw => lshw_xml.to_xml, 
+      :lldp => lldp_xml.to_xml,
+      :CHASSIS_TAG => facter['asset_tag']}
+
+      log "Unable to submit LSHW and LLDP report"
       return 1
     end
+  end
 
-    log "Changing status back to #{final_status}"
-    if not collins.set_status! asset.tag, final_status, "Setting state back to #{final_status}"
-      log "Unable to change status"
-      return 1
+  def self.generate_lldp_report
+    begin
+      run_cmd 'lldpctl', '-f', 'xml'
+    rescue => e
+      log "Failed to run lshw. Error: #{e.message}"
+      raise e
     end
   end
 
   def self.generate_lshw_report
     begin
-      run_cmd "/usr/sbin/lshw", "-quiet", "-xml"
+      run_cmd '/usr/sbin/lshw', '-quiet', '-xml'
     rescue => e
       log "Failed to run lshw. Error: #{e.message}"
       raise e
@@ -69,3 +86,4 @@ class SendLshwReport
   end
 
 end
+
