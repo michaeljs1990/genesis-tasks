@@ -18,4 +18,5 @@ collins:
     timeout: 30
 :stage2_url: http://192.168.1.5/stage2/init.rb
 :loggers: ['Collins']
-
+:genesis_tasks:
+    :lldp_rpm: ftp://ftp.pbone.net/mirror/ftp5.gwdg.de/pub/opensuse/repositories/home:/vbernat/CentOS_CentOS-6/x86_64/lldpd-0.7.6-2.1.x86_64.rpm
