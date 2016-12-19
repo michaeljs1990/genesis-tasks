@@ -4,10 +4,7 @@ intake:
   - SetupNTP
   - IpmiStart
   - AssetCreation
-  - SendLshwReport
-  - BiosConfigrC6105
-  - BiosConfigrR720
-  - FixDellFatPartitions
+  - SendSystemReport
   tasks:
   - *intake_tasks
   - Reboot
