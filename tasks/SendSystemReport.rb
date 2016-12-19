@@ -26,7 +26,7 @@ class SendSystemReport
     install :gem, 'nokogiri'
 
     lldpd_url = @task_conf[:lldp_rpm]
-    log "Installing lldpctl from #{lldp_url}"
+    log "Installing lldpctl from #{lldpd_url}"
     open('/tmp/lldp.rpm', 'wb') do |file|
       file << open(lldpd_url).read
     end
