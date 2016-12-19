@@ -7,7 +7,6 @@ intake:
   - SendSystemReport
   tasks:
   - *intake_tasks
-  - Reboot
 burnin:
   description: Cook CPUs
   tasks: &burnin_tasks
