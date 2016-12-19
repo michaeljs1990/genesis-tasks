@@ -4,6 +4,8 @@ class SendSystemReport
   include Genesis::Framework::Task
 
   description "Send Lshw info to collins"
+  # hold all yml config for this task
+  @task_conf = [] 
 
   precondition "has asset tag?" do
     not facter['asset_tag'].nil?
@@ -18,13 +20,13 @@ class SendSystemReport
   end
 
   init do
-    # install nokogiri for parsing XML
+    @task_conf = config[:genesis_tasks][:send_system_report]
+
+    log 'Installing nokogiri for XML parsing'
     install :gem, 'nokogiri'
 
-    require 'open-uri'
-
-    # Download rpm package to install
-    lldpd_url = config[:genesis_tasks][:lldp_rpm]
+    lldpd_url = @task_conf[:lldp_rpm]
+    log "Installing lldpctl from #{lldp_url}"
     open('/tmp/lldp.rpm', 'wb') do |file|
       file << open(lldpd_url).read
     end
@@ -34,7 +36,7 @@ class SendSystemReport
     install :rpm, 'lshw', '/tmp/lldp.rpm'
 
     log 'Starting up lldpd so we can call lldpctl'
-    `/etc/init.d/lldpd start`
+    run_cmd "/etc/init.d/lldpd", "start"
   end
 
   run do
@@ -48,6 +50,8 @@ class SendSystemReport
     lshw_xml = Nokogiri::XML lshw_report
    
     lldp_report = self.generate_lldp_report
+    # special case for testing environment
+    lldp_report = self.generate_fake_lldp_report if @task_conf[:no_tor_switch]
     lldp_xml = Nokogiri::XML lldp_report
 
     # Send report to collins so it's useful to us 
@@ -85,5 +89,35 @@ class SendSystemReport
     end
   end
 
-end
+  # useful in environments like a home lab where
+  # you may not have a TOR switch setup and only
+  # have a single router on the network. 
+  def self.generate_fake_lldp_report
+    log 'Generating fake LLDP report'
+    return %{<?xml version="1.0" encoding="UTF-8"?>
+      <lldp label="LLDP neighbors">
+       <interface label="Interface" name="#{@task_conf[:interface_name]}" via="LLDP" rid="1" age="0 day, 00:18:25">
+        <chassis label="Chassis">
+         <id label="ChassisID" type="mac">#{@task_conf[:chassis_id]}</id>
+         <name label="SysName">#{@task_conf[:sys_name]}</name>
+         <descr label="SysDescr">#{@task_conf[:sys_descr]}</descr>
+         <capability label="Capability" type="Router" enabled="on"/>
+        </chassis>
+        <port label="Port">
+         <id label="PortID" type="local">616</id>
+         <descr label="PortDescr">ge-0/0/7.0</descr>
+         <mfs label="MFS">1514</mfs>
+         <auto-negotiation label="PMD autoneg" supported="no" enabled="yes">
+          <advertised label="Adv" type="1Base-T" hd="no" fd="yes"/>
+          <current label="MAU oper type">unknown</current>
+         </auto-negotiation>
+        </port>
+        <vlan label="VLAN" vlan-id="#{@task_conf[:vlan_id]}" pvid="yes">#{@task_conf[:vlan_name]}</vlan>
+        <lldp-med label="LLDP-MED">
+         <device-type label="Device Type">Network Connectivity Device</device-type>
+        </lldp-med>
+       </interface>
+      </lldp>}
+  end
 
+end
