@@ -13,7 +13,7 @@ intake:
   - Shutdown
 provision:
   description: Spin up a new machine
-  task:
+  tasks:
   - SetupNTP
   - ProvisionGetConfig 
 burnin:
