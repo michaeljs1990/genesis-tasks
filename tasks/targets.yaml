@@ -6,10 +6,8 @@ intake:
   - AssetCreation
   - SendSystemReport
   success:
-  - ReportIntakeSuccess
   - Shutdown
   failure:
-  - ReportIntakeError
   - Shutdown
 provision:
   description: Spin up a new machine
