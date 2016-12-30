@@ -40,7 +40,6 @@ end
 
 Genesis::Framework::Tasks.load_tasks(tasks_dir)
 
-puts target_config
 target_config.each do |target_name, config|
   # translate tasks into their loaded modules
   tasks_as_syms = (config['tasks'] || []).map(&:to_sym)
@@ -53,9 +52,18 @@ target_config.each do |target_name, config|
   end
 
   # Get tasks that should be run on success and failure for a given target
-  success_as_syms = (config['success'] || []).map(&:to_sym)
   failure_as_syms = (config['failure'] || []).map(&:to_sym)
-  puts success_as_syms
+  success_as_syms = (config['success'] || []).map(&:to_sym)
+  # Append this to the list of tasks success is 
+  # really just an extention of tasks
+  success_as_syms.each do |stask|
+    tasks_as_syms << stask
+    begin
+      tasks << Genesis::Framework::Tasks.const_get(stask)
+    rescue NameError => e
+      raise "Unable to find task #{task_name} in target #{target_name} that includes Genesis::Framework::Task! Is it part of your tasks bundle? #{e.message}"
+    end
+  end
 
   # create the master rake task for this target
   desc (config['description'] || "#{target_name} target")
@@ -89,17 +97,9 @@ target_config.each do |target_name, config|
           end
         end
       end
+
       # create the dependency chain if there is a next task
       task(task_name => prev_task_name) unless prev_task_name.nil?
-    end
-
-    # Everything has run check if we want something special to happen now
-    # such as letting collins know everything is going to be ok.
-    success_as_syms.each do |stask_name|
-      unless Genesis::Framework::Tasks.execute stask_name
-        puts 'ERROR: success task failed: why did you do that to yourself?'
-        exit(1)
-      end
     end
   end
 end
