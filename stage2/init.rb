@@ -49,17 +49,6 @@ unless @genesis_config.fetch(:gems, nil).nil?
     end
   end
 end
-# support for testenv
-unless @genesis_config.fetch(:gem_files, nil).nil?
-  @genesis_config.fetch(:gem_files, []).each do |gem, source|
-    puts 'Installing %s gem...' % [gem]
-    gem_file = "/root/repo/gems/#{gem}.gem"
-    Genesis::RetryingFetcher.get(source) do |data|
-      File.open(gem_file, 'w', 0755) { |file| file.write data }
-    end
-    runcmd "gem install #{gem_file}"
-  end
-end
 
 puts "\nInstalling repo files"
 unless @genesis_config.fetch(:yum_repos, nil).nil?
