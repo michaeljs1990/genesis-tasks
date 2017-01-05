@@ -1,6 +1,6 @@
 ---
 :genesis_server: http://192.168.1.5
-:tasks_url: http://192.168.1.5:8888/tasks
+:tasks_url: http://192.168.1.5:8080/genesis/tasks.tgz
 :gems:
     - genesis_framework
 :gem_args: &gem_args --no-ri --no-rdoc # Arguments to pass to gem install. Can include --source for internal repos
@@ -9,7 +9,7 @@ collins:
     username: robot
     password: 42242I8KaG7V
     timeout: 30
-:stage2_url: http://192.168.1.5:8080/stage2.rb
+:stage2_url: http://192.168.1.5:8080/genesis/stage2.rb
 :loggers: ['Collins']
 :genesis_tasks:
     :send_system_report:
