@@ -1,5 +1,8 @@
 class IpmiConfigure
   include Genesis::Framework::Task
+  # This has only been tested on dell poweredge servers
+  # it is likely applicable to most but not all ipmi
+  # interfaces.
 
   description "Configure the IPMI console"
 
@@ -36,6 +39,49 @@ class IpmiConfigure
       log "Unable to set ipmi console netmask to #{ipmi.netmask}"
       raise e
     end
+
+    begin
+      run_cmd "ipmitool lan set 1 defgw ipaddr #{ipmi.gateway}"
+    rescue => e
+      log "Unable to set ipmi console gateway to #{ipmi.gateway}"
+      raise e
+    end
+
+    begin
+      run_cmd "ipmitool user set name 2 #{ipmi.username}"
+    rescue => e
+      log "Unable to set user to #{ipmi.username}"
+      raise e
+    end
+
+    begin
+      run_cmd "ipmitool user set name 2 #{ipmi.username}"
+    rescue => e
+      log "Unable to set user to #{ipmi.username}"
+      raise e
+    end
+
+    begin
+      run_cmd "ipmitool user set password 2 #{ipmi.password}"
+    rescue => e
+      log 'Unable to set user password'
+      raise e
+    end
+
+    begin
+      run_cmd "ipmitool channel setaccess 1 2 link=on ipmi=on callin=on privilege=4"
+    rescue => e
+      log 'Unable to set access for user on interface'
+      raise e
+    end
+
+    begin
+      run_cmd "ipmitool user enable 2"
+    rescue => e
+      log 'Unable to enable user'
+      raise e
+    end
+
   end
 
 end
