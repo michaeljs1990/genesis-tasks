@@ -5,7 +5,7 @@ intake:
   - IpmiStart
   - AssetCreation
   - SendSystemReport
-  - ConfigureIpmi
+  - IpmiConfigure
   - SetBootOrder
   success:
   - Shutdown
