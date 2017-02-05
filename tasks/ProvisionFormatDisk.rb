@@ -1,3 +1,6 @@
+require 'pathname'
+require 'fileutils'
+
 class ProvisionFormatDisk
   include Genesis::Framework::Task
 
@@ -41,9 +44,16 @@ class ProvisionFormatDisk
 
       # Create partion and update the partition table
       puts "Creating partitions on #{device}"
-      system "set -x ; parted --script --align=cyl -- #{device} #{mkpart.join(' ')} 2>&1"
+      system "parted --script --align=cyl -- #{device} #{mkpart.join(' ')} 2>&1"
       puts "Probing #{device}'s partitions"
-      system "set -x ; sleep 3 ; partprobe -s #{device} 2>&1"
+      system "sleep 3 ; partprobe -s #{device} 2>&1"
+
+      # TODO: Really bad assumption but using this for right now.
+      # should write some helper around partitions in order to
+      # properly query for the root device. Although everything
+      # above is hard coded right now so it's not going to hurt
+      # anything.
+      mount_device("#{device}1", '/mnt/chroot')
     end
 
   end
@@ -51,6 +61,12 @@ class ProvisionFormatDisk
   # Return a list of all drives that should be available
   # on this machine. If these are not available something
   # has gone very wrong.
+  #
+  # TODO: This function should handle making sure any device that
+  # we are about to return is not already mounted on the filesystem.
+  # This should never happen but rerunning this script multiple
+  # times without manual cleanup is very valuable for development
+  # speed and also just feels cleaner.
   def self.get_devices 
     devices = []
     @disks.each_with_index do |_, index|
@@ -58,6 +74,12 @@ class ProvisionFormatDisk
       devices << "/dev/sd#{drive}"
     end
     return devices
+  end
+
+  def self.mount_device device, mount_point
+    path = Pathname.new(mount_point)
+    FileUtils.mkpath(mount_point) if not path.directory?
+    run_cmd "mount #{device} #{mount_point}" if not path.mountpoint?
   end
 
 end
