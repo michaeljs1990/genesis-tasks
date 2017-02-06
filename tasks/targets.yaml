@@ -17,6 +17,7 @@ provision:
   - SetupNTP
   - ProvisionGetConfig 
   - ProvisionFormatDisk
+  - ProvisionDebootstrap
 burnin:
   description: Cook CPUs
   tasks: &burnin_tasks

@@ -23,3 +23,5 @@ collins:
         :vlan_name: NO-VLAN
     :provision_get_config:
         :config_url: http://192.168.1.5:8080/provision/config
+    :provision_debootstrap:
+        :debootstrap_rpm: ftp://195.220.108.108/linux/fedora-secondary/development/rawhide/Everything/aarch64/os/Packages/d/debootstrap-1.0.87-1.fc26.noarch.rpm
