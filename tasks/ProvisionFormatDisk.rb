@@ -1,5 +1,6 @@
 require 'pathname'
 require 'fileutils'
+require 'mixins/provision'
 
 class ProvisionFormatDisk
   include Genesis::Framework::Task
@@ -53,7 +54,9 @@ class ProvisionFormatDisk
       # properly query for the root device. Although everything
       # above is hard coded right now so it's not going to hurt
       # anything.
-      mount_device("#{device}1", '/mnt/chroot')
+      system("mkfs.ext4 -L root #{device}1")
+      system("mkswap -L swap #{device}2")
+      mount_device("#{device}1", Mixins::Provision::CHROOT_PATH)
     end
 
   end
