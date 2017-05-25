@@ -24,4 +24,5 @@ burnin:
   - TimedBurnin
 util:
   description: Utility Shell
-  tasks: []
+  tasks:
+  - UtilReportStartup
