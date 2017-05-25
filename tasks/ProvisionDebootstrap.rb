@@ -5,7 +5,6 @@ class ProvisionDebootstrap
   include Genesis::Framework::Task
 
   init do
-    install :rpm, "debootstrap"
     @task_conf = config[:genesis_tasks][:provision_debootstrap]
 
     debootstrap_url = @task_conf[:debootstrap_rpm]
