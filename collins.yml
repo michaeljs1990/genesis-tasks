@@ -1,20 +1,20 @@
 ---
-:genesis_server: http://192.168.1.5
-:tasks_url: http://192.168.1.5:8080/genesis/tasks.tgz
-:stage2_url: http://192.168.1.5:8080/genesis/stage2.rb
+:genesis_server: http://10.0.0..5
+:tasks_url: http://10.0.0.5:8080/genesis/tasks.tgz
+:stage2_url: http://10.0.0.5:8080/genesis/stage2.rb
 :loggers: ['Collins']
 :gems:
     - genesis_framework
 :gem_args: &gem_args --no-ri --no-rdoc # Arguments to pass to gem install. Can include --source for internal repos
 collins:
-    host: http://192.168.1.5:9000
+    host: http://10.0.0.5:9000
     username: robot
     password: 42242I8KaG7V
     timeout: 30
 :genesis_tasks:
     :send_system_report:
         :lldp_rpm: ftp://ftp.pbone.net/mirror/ftp5.gwdg.de/pub/opensuse/repositories/home:/vbernat/CentOS_CentOS-6/x86_64/lldpd-0.7.6-2.1.x86_64.rpm
-        :no_tor_switch: true # if this is false no params below this need to be set
+        :no_tor_switch: false # if this is false no params below this need to be set
         :interface_name: eth0
         :chassis_id: 18:1B:EB:6F:2E:E3
         :sys_name: home.router
@@ -22,6 +22,6 @@ collins:
         :vlan_id: 1
         :vlan_name: NO-VLAN
     :provision_get_config:
-        :config_url: http://192.168.1.5:8080/provision/config
+        :config_url: http://10.0.0.5:8080/provision/config
     :provision_debootstrap:
         :debootstrap_rpm: http://dl.fedoraproject.org/pub/epel/6/x86_64//debootstrap-1.0.85-1.el6.noarch.rpm 

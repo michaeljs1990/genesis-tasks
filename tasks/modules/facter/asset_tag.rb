@@ -20,7 +20,7 @@ Facter.add(:asset_tag) do
     unless tag.nil?
       tag.strip!
       case tag
-      when /^(M\d{6})$/
+      when /^(M\d{7})$/
         $1
       end
     end
