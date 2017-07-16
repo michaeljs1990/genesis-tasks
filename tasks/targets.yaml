@@ -4,6 +4,7 @@ intake:
   - SetupNTP
   - IpmiStart
   - AssetCreation
+  - DisableCpuFreqScaling
   - SendSystemReport
   - IpmiConfigure
   - SetBootOrder

@@ -40,6 +40,12 @@ class SendSystemReport
   end
 
   run do
+    # LLDP information is sometimes not returned fast enough causing
+    # intake to fail. When this happens only this block of code is 
+    # run again. Placing a sleep here to ensure it doesn't just run 3
+    # times quickly and actually gives a bit of a cool down so lldp
+    # has time to be returned.
+    sleep 30
     # require nokogiri now since we are guranteed to have it
     require 'nokogiri'
 
