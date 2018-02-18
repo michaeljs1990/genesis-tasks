@@ -24,4 +24,4 @@ collins:
     :provision_get_config:
         :config_url: http://192.168.2.4:8080/provision/config
     :provision_debootstrap:
-        :debootstrap_rpm: http://dl.fedoraproject.org/pub/epel/6/x86_64//debootstrap-1.0.85-1.el6.noarch.rpm 
+        :debootstrap_rpm: http://dl.fedoraproject.org/pub/epel/6/x86_64/Packages/d/debootstrap-1.0.93-1.el6.noarch.rpm
