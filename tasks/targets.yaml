@@ -19,6 +19,10 @@ provision:
   - ProvisionGetConfig 
   - ProvisionFormatDisk
   - ProvisionDebootstrap
+  - ProvisionSSHSetup
+  - ProvisionNetworkSetup
+  success:
+  - ProvisionSuccess
 burnin:
   description: Cook CPUs
   tasks: &burnin_tasks
