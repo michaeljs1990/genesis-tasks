@@ -21,6 +21,8 @@ provision:
   - ProvisionDebootstrap
   - ProvisionSSHSetup
   - ProvisionNetworkSetup
+  - ProvisionKernelSetup
+  - ProvisionFstabSetup
   success:
   - ProvisionSuccess
 burnin:
