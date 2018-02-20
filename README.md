@@ -18,3 +18,6 @@ the RPMs that are built for centos6 you can set the asset tag as follows.
 ```
 smbios-sys-info --asset-tag --set=SOME_TAG
 ```
+
+Reboot your system for it to take effect in tools such as dmidecode. Possibly
+you can do this in a much more surgical way but I haven't found it.
