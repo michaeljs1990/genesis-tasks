@@ -16,8 +16,11 @@ class ProvisionSSHSetup
   end
 
   run do
+    magic_tic = "'\"'\"'"
+
     Mixins::Provision.chroot_apt_install ["openssh-server"]
     Mixins::Provision.chroot_cmd "echo root:#{@password} | chpasswd"
+    Mixins::Provision.chroot_cmd "sed -i #{magic_tic}s/prohibit-password/yes/#{magic_tic} /etc/ssh/sshd_config"
   end
 
 end
