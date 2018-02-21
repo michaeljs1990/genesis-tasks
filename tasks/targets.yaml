@@ -22,7 +22,10 @@ provision:
   - ProvisionSSHSetup
   - ProvisionNetworkSetup
   - ProvisionKernelSetup
+  - ProvisionLocaleSetup
   - ProvisionFstabSetup
+  - ProvisionGrubSetup
+  - ProvisionInitramfsSetup
   success:
   - ProvisionSuccess
 burnin:
