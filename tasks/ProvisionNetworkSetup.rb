@@ -45,7 +45,9 @@ class ProvisionNetworkSetup
 
   def self.get_interface
     install :rpm, "biosdevname"
-    run_cmd("biosdevname -i eth0").strip
+    # need to look into why exactly ubuntu thought it needed
+    # to be special af and use eno instead of em for the prefix.
+    run_cmd("biosdevname -i eth0 -P eno").strip
   end
 
 end
