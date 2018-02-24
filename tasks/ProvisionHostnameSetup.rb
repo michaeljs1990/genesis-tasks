@@ -18,13 +18,17 @@ class ProvisionHostnameSetup
 
   run do
     distro = @provision_config['os']['distro']
-    erb_file = File.read "templates/#{distro}_hosts.erb"
 
     hostname_fqdn = @hostname
     hostname = hostname_fqdn.split(".").first
 
+    erb_file = File.read "templates/#{distro}_hosts.erb"
     template = ERB.new(erb_file).result binding
     Mixins::Provision.write_string_to_chroot(template, "/etc/hosts")
+
+    erb_file = File.read "templates/#{distro}_hostname.erb"
+    template = ERB.new(erb_file).result binding
+    Mixins::Provision.write_string_to_chroot(template, "/etc/hostname")
 
     Mixins::Provision.chroot_cmd "hostname #{hostname_fqdn}"
   end
