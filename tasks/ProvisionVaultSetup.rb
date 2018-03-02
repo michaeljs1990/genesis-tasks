@@ -11,7 +11,7 @@ class ProvisionVaultSetup
   end
 
   run do
-    token = @provision_config['vault']['token']
+    token = @provision_config['vault_token']
     distro = @provision_config['os']['distro']
 
     # Replace with config param to make switching this out easy

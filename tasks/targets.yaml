@@ -28,6 +28,9 @@ provision:
   - ProvisionFstabSetup
   - ProvisionGrubSetup
   - ProvisionInitramfsSetup
+  - ProvisionVaultSetup
+  - ProvisionPuppetSetup
+  - ProvisionFirstbootSetup
   success:
   - ProvisionSuccess
 burnin:
