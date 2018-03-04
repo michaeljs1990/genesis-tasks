@@ -23,6 +23,12 @@ class ProvisionPuppetSetup
     Mixins::Provision.chroot_cmd "apt update"
     Mixins::Provision.chroot_apt_install ["puppet-agent"]
 
+    # Setup gemrc file so that when gems are run they look in the correct location
+    # just more crap to avoid installing ruby as a system dependency.
+    erb_file = File.read "templates/gemrc.erb"
+    template = ERB.new(erb_file).result binding
+    Mixins::Provision.write_string_to_chroot(template, "/root/.gemrc")
+
     # Install gems that are needed for my puppet code to run. In the future move this
     # to be a list that can be passed in via config values. For whatever reason the gem
     # environment in the chroot installs to the system gem folder instead of the puppetlabs
