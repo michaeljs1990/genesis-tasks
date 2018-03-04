@@ -6,6 +6,10 @@ class ProvisionPuppetSetup
 
   init do
     @provision_config = Mixins::Config.fetch
+
+    @host = @provision_config['collins']['host']
+    @username = @provision_config['collins']['username']
+    @password = @provision_config['collins']['password']
   end
 
   run do
@@ -25,8 +29,17 @@ class ProvisionPuppetSetup
     # gem environment. We overwrite this to try to ensure isolating everything about bootstap
     # from the running system.
     binary_dir = '/opt/puppetlabs/puppet/bin/'
-    Mixins::Provision.chroot_cmd "/opt/puppetlabs/puppet/bin/gem install -n #{binary_dir} -N collins_auth"
-    Mixins::Provision.chroot_cmd "/opt/puppetlabs/puppet/bin/gem install -n #{binary_dir} -N librarian-puppet"
+    install_dir = '/opt/puppetlabs/puppet/lib/ruby/gems/2.4.0'
+    Mixins::Provision.chroot_cmd "/opt/puppetlabs/puppet/bin/gem install -i #{install_dir} -n #{binary_dir} -N collins_auth"
+    Mixins::Provision.chroot_cmd "/opt/puppetlabs/puppet/bin/gem install -i #{install_dir} -n #{binary_dir} -N librarian-puppet"
+
+    # Setup config file needed for the collins auth module to talk to our collins.
+    host = @host
+    user = @username
+    pass = @password
+    erb_file = File.read "templates/collins.yml.erb"
+    template = ERB.new(erb_file).result binding
+    Mixins::Provision.write_string_to_chroot(template, "/etc/collins.yml")
   end
 
 end
