@@ -30,7 +30,10 @@ class ProvisionHostnameSetup
     template = ERB.new(erb_file).result binding
     Mixins::Provision.write_string_to_chroot(template, "/etc/hostname")
 
-    Mixins::Provision.chroot_cmd "hostname #{hostname_fqdn}"
+    # hostnamectl needs dbus running for whatever reason... cool.
+    Mixins::Provision.chroot_cmd "systemctl start dbus"
+    Mixins::Provision.chroot_cmd "hostnamectl set-hostname #{hostname_fqdn}"
+    Mixins::Provision.chroot_cmd "systemctl stop dbus"
   end
 
 end

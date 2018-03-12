@@ -1,10 +1,9 @@
-# interfaces(5) file used by ifup(8) and ifdown(8)
-auto lo
-iface lo inet loopback
-
-# The primary network interface
-auto <%= primary_interface %>
-iface <%= primary_interface %> inet static
-    address <%= @address %>
-    netmask <%= @netmask %>
-    gateway <%= @gateway %>
+network:
+    version: 2
+    renderer: networkd
+    ethernets:
+        <%= primary_interface %>:
+            addresses:
+                - <%= @address %>/24
+            gateway4: <%= @gateway %> 
+            dhcp4: no
