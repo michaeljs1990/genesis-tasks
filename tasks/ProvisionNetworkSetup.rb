@@ -47,7 +47,7 @@ class ProvisionNetworkSetup
     install :rpm, "biosdevname"
     # need to look into why exactly ubuntu thought it needed
     # to be special af and use eno instead of em for the prefix.
-    run_cmd("biosdevname -i eth0 -P eno").strip
+    run_cmd("biosdevname -i eno1 -P eno").strip
   end
 
 end
