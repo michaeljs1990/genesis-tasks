@@ -40,7 +40,11 @@ class ProvisionNetworkSetup
     erb_file = File.read "templates/#{distro}_interfaces.erb"
     primary_interface = get_interface
     template = ERB.new(erb_file).result binding
-    Mixins::Provision.write_string_to_chroot(template, "/etc/network/interfaces.d/default")
+    if distro == "bionic"
+      Mixins::Provision.write_string_to_chroot(template, "/etc/netplan/default.yaml")
+    else
+      Mixins::Provision.write_string_to_chroot(template, "/etc/network/interfaces.d/default")
+    end
   end
 
   def self.get_interface
