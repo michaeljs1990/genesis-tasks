@@ -19,6 +19,7 @@ provision:
   - ProvisionGetConfig 
   - ProvisionFormatDisk
   - ProvisionDebootstrap
+  - ProvisionSetEnv
   - ProvisionSSHSetup
   - ProvisionNetworkSetup
   - ProvisionDNSSetup
