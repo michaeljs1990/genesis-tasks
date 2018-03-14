@@ -31,9 +31,9 @@ class ProvisionHostnameSetup
     Mixins::Provision.write_string_to_chroot(template, "/etc/hostname")
 
     # hostnamectl needs dbus running for whatever reason... cool.
-    Mixins::Provision.chroot_cmd "systemctl start dbus"
+    Mixins::Provision.chroot_cmd "service dbus start"
     Mixins::Provision.chroot_cmd "hostnamectl set-hostname #{hostname_fqdn}"
-    Mixins::Provision.chroot_cmd "systemctl stop dbus"
+    Mixins::Provision.chroot_cmd "service dbus stop"
   end
 
 end

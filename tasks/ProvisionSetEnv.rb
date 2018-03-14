@@ -14,7 +14,8 @@ class ProvisionSetEnv
     if distro == "bionic"
       # Properly set path so everything else works how one would expect. If you don't
       # set this the path uses the same one from the host system.
-      Mixins::Provision.chroot_cmd "echo '. /etc/environment' >> /root/.bashrc"
+      Mixins::Provision.chroot_cmd 'echo "# Hack for running in chroot" >> /root/.bashrc'
+      Mixins::Provision.chroot_cmd 'echo ". /etc/environment" >> /root/.bashrc'
     end
   end
 
