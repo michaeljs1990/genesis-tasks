@@ -16,11 +16,15 @@ class ProvisionSSHSetup
   end
 
   run do
-    magic_tic = "'\"'\"'"
+    distro = @provision_config['os']['distro']
 
     Mixins::Provision.chroot_apt_install ["openssh-server"]
     Mixins::Provision.chroot_cmd "echo root:#{@password} | chpasswd"
-    Mixins::Provision.chroot_cmd "sed -i #{magic_tic}s/prohibit-password/yes/#{magic_tic} /etc/ssh/sshd_config"
+
+    # Setup the sshd config
+    erb_file = File.read "templates/#{distro}_sshd_config.erb"
+    template = ERB.new(erb_file).result binding
+    Mixins::Provision.write_string_to_chroot(template, "/etc/ssh/sshd_config")
   end
 
 end
