@@ -17,11 +17,11 @@ module Mixins
 
     def self.chroot_apt_install packages
       pkg = packages.join " "
-      run_cmd("chroot #{CHROOT_PATH} /bin/bash -c 'DEBIAN_FRONTEND=noninteractive apt install -y #{pkg}'")
+      run_cmd("chroot #{CHROOT_PATH} env -i bash -l -c 'DEBIAN_FRONTEND=noninteractive apt install -y #{pkg}'")
     end
 
     def self.chroot_cmd cmd
-      run_cmd("chroot #{CHROOT_PATH} /bin/bash -c '#{cmd}'")
+      run_cmd("chroot #{CHROOT_PATH} env -i bash -l -c '#{cmd}'")
     end
 
   end
