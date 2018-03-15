@@ -17,9 +17,9 @@ class ProvisionPuppetSetup
 
     # Installing puppet this way will not give you a system wide ruby install keeping
     # the base OS super clean.
-    Mixins::Provision.chroot_cmd "wget https://apt.puppetlabs.com/puppet5-release-xenial.deb"
-    Mixins::Provision.chroot_cmd "dpkg -i puppet5-release-xenial.deb"
-    Mixins::Provision.chroot_cmd "rm /puppet5-release-xenial.deb"
+    Mixins::Provision.chroot_cmd "wget https://apt.puppetlabs.com/puppet5-nightly/puppet5-nightly-release-stretch.deb"
+    Mixins::Provision.chroot_cmd "dpkg -i puppet5-nightly-release-stretch.deb"
+    Mixins::Provision.chroot_cmd "rm /puppet5-nightly-release-stretch.deb"
     Mixins::Provision.chroot_cmd "apt update"
     Mixins::Provision.chroot_apt_install ["puppet-agent"]
 
