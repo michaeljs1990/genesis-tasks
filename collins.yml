@@ -13,7 +13,7 @@ collins:
     timeout: 30
 :genesis_tasks:
     :send_system_report:
-        :lldp_rpm: ftp://ftp.pbone.net/mirror/ftp5.gwdg.de/pub/opensuse/repositories/home:/vbernat/CentOS_CentOS-6/x86_64/lldpd-0.7.6-2.1.x86_64.rpm
+        :lldp_rpm: http://mirror.ghettoforge.org/distributions/gf/el/7/gf/x86_64//lldpd-0.9.2-1.1.x86_64.rpm
         :no_tor_switch: false # if this is false no params below this need to be set
         :interface_name: eth0
         :chassis_id: 18:1B:EB:6F:2E:E3

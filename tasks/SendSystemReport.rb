@@ -36,7 +36,7 @@ class SendSystemReport
     install :rpm, 'lshw', '/tmp/lldp.rpm'
 
     log 'Starting up lldpd so we can call lldpctl'
-    run_cmd "/etc/init.d/lldpd", "start"
+    run_cmd "systemctl", "start", "lldpd"
   end
 
   run do
