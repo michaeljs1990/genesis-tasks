@@ -28,8 +28,6 @@ class ProvisionFirstbootSetup
     gemhome = 'GEM_HOME=/opt/puppetlabs/puppet/lib/ruby/gems/2.4.0'
     Mixins::Provision.chroot_cmd "rm -rf #{path}"
     Mixins::Provision.chroot_cmd "git clone #{repo} #{path}"
-    Mixins::Provision.chroot_cmd "cd #{path} && #{gemhome} PATH=$PATH:/opt/puppetlabs/bin #{librarian} install"
-
   end
 
 end
